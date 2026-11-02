@@ -1,6 +1,6 @@
 # Fiction Retail Agent Dataset
 
-**Scope:** A repository distribution of the public Fiction Retail SQLite database, this repository's v0.4 extension, and a grounded RAG corpus. All business data is fictional and intended for education. The [DataHub source description](https://github.com/datahub-project/static-assets/blob/main/datasets/fiction-retail/README.md) identifies the ten-table source database and its CC0 license. See the [data contract](DATA_CONTRACT.md) for identity, provenance, and temporal limits.
+**Scope:** A repository distribution of the public Fiction Retail SQLite database, this repository's v0.4 extension, and a grounded RAG corpus. All business data is fictional and intended for education. The [DataHub source description](https://github.com/datahub-project/static-assets/blob/main/datasets/fiction-retail/README.md) identifies the ten-table source database and its CC0 license. See the [schema reference](SCHEMA.md) for all 27 tables and the [data contract](DATA_CONTRACT.md) for identity, provenance, and temporal limits.
 
 ## Repository files
 
