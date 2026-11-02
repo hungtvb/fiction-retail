@@ -31,6 +31,7 @@ The 11,934 return records include 2,977 `BUYER_REMORSE` and 2,398 `FIT_ISSUE` re
 - The 5,000 product IDs have 4,992 distinct import names, many of which are generic business jargon rather than merchandise descriptions. New product guides are explicitly fictional interpretations linked by ID, not manufacturer specifications or historical attributes.
 - Source product price and weight have no validity period. Historical sale value belongs to `order_items`; a dated synthetic list price cannot be applied to April transactions. The 20 May 2024 synthetic unit costs cannot establish historical gross margins.
 - The 100 extension cases cover selected backorders. There are 3,039 source orders with `backordered` status; do not extrapolate case outcomes to the full order set or all warehouses.
+- The [source DB audit](SOURCE_DB_AUDIT.md) found 16,995 category-specific promotion links without an eligible order item and summed stock above nominal capacity at all 15 warehouses. Do not use those fields for unverified campaign attribution or capacity planning.
 - There is no promised delivery date, return approval state, or refund payment confirmation. Therefore on-time SLA and completed-refund rates cannot be measured from these tables.
 - The extension's 564 opportunities include 204 synthetic wins (36.2%) linked to delivered orders with recorded value USD 288,322.91. This assisted attribution is not evidence of employee performance or incremental sales.
 

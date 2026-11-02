@@ -9,7 +9,7 @@
 | `data/fiction-retail.db` | `source` | 10 | Unchanged [DataHub source](https://github.com/datahub-project/static-assets/blob/main/datasets/fiction-retail/README.md) |
 | `data/fiction_runtime_v04.sqlite` | `extension` | 17 | Synthetic scenarios, dated catalog values, and guide index authored in this repository |
 
-The source tables have **no declared SQLite primary or foreign keys**. Their ID columns are logical keys: each of the ten table ID columns was unique in this release. The extension declares primary keys and internal foreign keys for selected relationships. SQLite does not declare cross-database foreign keys between `extension` and `source`; use the joins listed below and validate IDs when importing a different source file.
+The source tables have **no declared SQLite primary or foreign keys and no persistent indexes**. Their ID columns are logical keys: each of the ten table ID columns was unique in this release. The extension declares primary keys and internal foreign keys for selected relationships. SQLite does not declare cross-database foreign keys between `extension` and `source`; use the joins listed below and validate IDs when importing a different source file. See the [source DB audit](SOURCE_DB_AUDIT.md) before relying on promotions, capacity, or refunds.
 
 ```mermaid
 erDiagram
@@ -50,6 +50,7 @@ The `ID` column in each row below is unique in the released data but not a decla
 - `orders.order_date`, `shipments.shipped_date`, `shipments.delivered_date`, and `returns.return_date` are text dates. Source order dates span 2023-01-01 through 2024-04-30.
 - `orders.total_amount` is recorded USD order value. It matches the sum of `order_items.quantity * unit_price * (1 - discount_pct / 100.0)` within USD 0.02 for all 150,000 orders in this snapshot. It does not prove payment settlement.
 - `order_items.discount_pct` and `promotions.discount_pct` are integer percentage points, not fractions. `order_items.unit_price` is the historical transaction price.
+- `promotions.applies_to_category = 'all'` is the actual unrestricted-promotion sentinel in this SQLite file. It is not `NULL`, despite the upstream README description. Category-specific promotion links have substantial mismatches with their orders' product categories; see the audit.
 - `products.price` and `products.weight_kg` are undated import fields. The imported product names are often not credible merchandise descriptions. Do not infer current offers or product specifications from them.
 - `inventory.quantity_on_hand - inventory.reserved_quantity` is a stock calculation, but the table lacks an observation timestamp. `last_restocked_date` is **not** a snapshot timestamp.
 - `returns.refund_amount` is a recorded amount, not proof that a refund was approved or paid. `shipments` has no promised delivery date, so the schema cannot establish on-time delivery.

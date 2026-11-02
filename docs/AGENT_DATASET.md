@@ -102,7 +102,7 @@ eligible = [c for c in chunks
 
 ## Agent routing and controls
 
-1. **Orders, amounts, returns, stock, prices, and eligibility:** query the SQLite databases with parameterized, read-only SQL. RAG can supply definitions and policies, but it is not the source of transaction values.
+1. **Orders, amounts, returns, stock, prices, and eligibility:** query the SQLite databases with parameterized, read-only SQL. RAG can supply definitions and policies, but it is not the source of transaction values. Check the [source DB audit](SOURCE_DB_AUDIT.md) before interpreting promotions, warehouse capacity, or refunds.
 2. **Product selection and support:** retrieve the individual guide by product ID or its fictional display name, then cite `source_ref`. State that the guide is fictional; do not equate its specifications with original manufacturer facts. For price, only the 50 dated offers have a synthetic curated list price.
 3. **Policies:** filter `business_policy` by the question's `as_of` date. Outside its interval, do not call a policy current.
 4. **Warehouse transfer and price proposals:** use case-specific evidence or dated pricing constraints with the matching policy. A qualifying result is a proposal requiring manager approval, never an executed change.
