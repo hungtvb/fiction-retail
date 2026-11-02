@@ -1,0 +1,26 @@
+# Noma USB-C Travel Hub 6BBFCB57 — Sand
+
+## Description
+This fictional usb-c travel hub is intended for a compact desk setup. It has port layout of two USB-A ports and Ethernet and power passthrough of 65 W.
+
+## Specifications
+- Port layout: two USB-A ports and Ethernet.
+- Power passthrough: 65 W.
+- Finish: Sand.
+- Intended use: a compact desk setup.
+
+## Selection advice
+Confirm that the host USB-C port supports the required data or video mode; an HDMI socket does not create video capability in a data-only host port.
+
+## Handling and care
+Disconnect peripherals before cleaning the housing with a dry cloth; keep liquid away from the ports.
+
+## Limitations
+No display resolution, charging speed, or operating-system certification is established by this profile.
+
+## Product-specific questions
+### What are its port layout and power passthrough?
+Port layout: two USB-A ports and Ethernet. Power passthrough: 65 W.
+
+### How do I choose this usb-c travel hub?
+Confirm that the host USB-C port supports the required data or video mode; an HDMI socket does not create video capability in a data-only host port. No display resolution, charging speed, or operating-system certification is established by this profile.

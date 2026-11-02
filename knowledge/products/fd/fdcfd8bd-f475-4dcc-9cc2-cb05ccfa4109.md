@@ -1,0 +1,26 @@
+# Sora Short-Sleeve Polo FDCFD8BD — Slate
+
+## Description
+This fictional short-sleeve polo is intended for travel packing. Its collar is rib-knit; its fabric is cotton jersey.
+
+## Specifications
+- Collar: rib-knit.
+- Fabric: cotton jersey.
+- Color: Slate.
+- Intended use: travel packing.
+
+## Selection advice
+Check chest circumference, shoulder width, and collar comfort against garment measurements.
+
+## Handling and care
+Wash cold, reshape the collar, and avoid high heat unless the label permits it.
+
+## Limitations
+No anti-odor, UV-protection, or performance-fabric certification is provided.
+
+## Product-specific questions
+### What are its collar and fabric?
+Collar: rib-knit. Fabric: cotton jersey.
+
+### Is this configuration suitable for my intended use?
+Check chest circumference, shoulder width, and collar comfort against garment measurements. No anti-odor, UV-protection, or performance-fabric certification is provided.

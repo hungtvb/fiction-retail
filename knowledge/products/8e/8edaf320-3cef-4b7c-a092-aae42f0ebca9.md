@@ -1,0 +1,26 @@
+# Sora Grip Pliers 8EDAF320 — Stone
+
+## Description
+Sora Grip Pliers 8EDAF320 — Stone is a fictional option for routine household repairs. Its jaw opening is 25 mm; its handle is rubberized grip.
+
+## Specifications
+- Jaw opening: 25 mm.
+- Handle: rubberized grip.
+- Finish: Stone.
+- Intended use: routine household repairs.
+
+## Selection advice
+Match jaw size to the workpiece and avoid using the tool as a substitute for an insulated electrical tool.
+
+## Handling and care
+Clean and lightly protect the pivot after use; store dry.
+
+## Limitations
+No electrical insulation or precision torque certification is supplied.
+
+## Product-specific questions
+### What are its jaw opening and handle?
+Jaw opening: 25 mm. Handle: rubberized grip.
+
+### Is this configuration suitable for my intended use?
+Match jaw size to the workpiece and avoid using the tool as a substitute for an insulated electrical tool. No electrical insulation or precision torque certification is supplied.

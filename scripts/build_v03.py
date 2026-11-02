@@ -138,7 +138,7 @@ def build(source: Path, v02: Path, output: Path, knowledge: Path, *, overwrite=F
     # Publish company-facing policy text, not ingestion/evaluation instructions.
     policy_text = POLICY_PRICING
     policy_path = knowledge / 'policies' / (POLICY_ID + '.md')
-    policy_path.write_text(policy_text, encoding='utf-8')
+    policy_path.write_text(policy_text, encoding='utf-8', newline='\r\n')
     doc_id = 'DOC-' + hashlib.sha256(POLICY_ID.encode()).hexdigest()[:24]
     db.execute('INSERT INTO knowledge_documents VALUES (?,?,?,?,?,?,?)',
                (doc_id, None, POLICY_ID, 'business_policy', f'policies/{POLICY_ID}.md', sha(policy_path), 'scenario_generated'))

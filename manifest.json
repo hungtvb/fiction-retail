@@ -1,0 +1,20 @@
+{
+  "classification": "Synthetic educational data; extension and business documents are scenario_generated",
+  "curated_product_count": 50,
+  "knowledge_document_count": 5003,
+  "pack_version": "fiction-retail-agent-dataset-v2",
+  "rag_chunk_count": 10093,
+  "rag_chunks_by_kind": {
+    "business_policy": 16,
+    "curated_offer": 50,
+    "product_guide": 5000,
+    "source_product": 5000,
+    "table_schema": 27
+  },
+  "rag_sha256": "0e72c5d49aef2e7de04fc9bf14d9feeae8b0fdb5a3da9495920e029145a488ee",
+  "runtime_sha256": "abfcf32b2f658bdfa425e13553a728fa605b612d7bcbaa1995bedb8e90b0352f",
+  "source_product_count": 5000,
+  "source_sha256": "9f95373e46219e880ae54f995b6f2c2c439c3746e500e484fe3ab2bf9ac55754",
+  "source_table_count": 10,
+  "upstream_url": "https://github.com/datahub-project/static-assets/tree/main/datasets/fiction-retail"
+}

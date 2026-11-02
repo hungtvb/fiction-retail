@@ -1,0 +1,26 @@
+# Alder Everyday Hoodie 8ABC7FCC — Sage
+
+## Description
+Alder Everyday Hoodie 8ABC7FCC — Sage is a fictional option for everyday layering. It has fit of oversized and fabric of lightweight cotton blend.
+
+## Specifications
+- Fit: oversized.
+- Fabric: lightweight cotton blend.
+- Color: Sage.
+- Intended use: everyday layering.
+
+## Selection advice
+Allow room for the intended layer underneath and check sleeve and body lengths.
+
+## Handling and care
+Wash inside out on a cold cycle and dry as instructed on the label.
+
+## Limitations
+The garment is not rated for rain protection or a defined insulation level.
+
+## Product-specific questions
+### What are its fit and fabric?
+Fit: oversized. Fabric: lightweight cotton blend.
+
+### How do I choose this everyday hoodie?
+Allow room for the intended layer underneath and check sleeve and body lengths. The garment is not rated for rain protection or a defined insulation level.

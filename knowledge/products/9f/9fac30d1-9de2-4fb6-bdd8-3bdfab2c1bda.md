@@ -1,0 +1,26 @@
+# Noma Light Outer Jacket 9FAC30D1 — Ink
+
+## Description
+Noma Light Outer Jacket 9FAC30D1 — Ink is a fictional option for weekend wear. Its cut is cropped; its shell is nylon woven.
+
+## Specifications
+- Cut: cropped.
+- Shell: nylon woven.
+- Color: Ink.
+- Intended use: weekend wear.
+
+## Selection advice
+Try the jacket over the clothing likely to be worn beneath it and check shoulder movement.
+
+## Handling and care
+Close fasteners before washing and air-dry according to the garment label.
+
+## Limitations
+Wind resistance does not establish waterproofing or sealed seams.
+
+## Product-specific questions
+### What are its cut and shell?
+Cut: cropped. Shell: nylon woven.
+
+### How do I choose this light outer jacket?
+Try the jacket over the clothing likely to be worn beneath it and check shoulder movement. Wind resistance does not establish waterproofing or sealed seams.

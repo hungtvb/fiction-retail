@@ -137,7 +137,7 @@ def choose_products(src, cases):
 def write_document(root,relative,body):
  path=(root/relative)
  path.parent.mkdir(parents=True,exist_ok=True)
- path.write_text(body,encoding='utf8')
+ path.write_text(body,encoding='utf8',newline='\r\n')
  return sha(path)
 
 

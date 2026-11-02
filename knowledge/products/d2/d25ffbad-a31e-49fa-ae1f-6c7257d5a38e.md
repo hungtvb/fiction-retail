@@ -1,0 +1,26 @@
+# Brook USB Desk Lamp D25FFBAD — Olive
+
+## Description
+This fictional usb desk lamp is intended for a shared living space. Its input power is 5 V USB, 5 W; its shade is tilting shade.
+
+## Specifications
+- Input power: 5 V USB, 5 W.
+- Shade: tilting shade.
+- Finish: Olive.
+- Intended use: a shared living space.
+
+## Selection advice
+Verify the available USB supply and position the lamp to limit screen glare.
+
+## Handling and care
+Disconnect power before cleaning the shade and cable.
+
+## Limitations
+Wattage is electrical input, not a measured brightness or dimming guarantee.
+
+## Product-specific questions
+### What are its input power and shade?
+Input power: 5 V USB, 5 W. Shade: tilting shade.
+
+### Is this configuration suitable for my intended use?
+Verify the available USB supply and position the lamp to limit screen glare. Wattage is electrical input, not a measured brightness or dimming guarantee.

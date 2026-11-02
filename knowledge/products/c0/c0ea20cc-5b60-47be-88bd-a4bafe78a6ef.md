@@ -1,0 +1,26 @@
+# Linden Desk Charging Pad C0EA20CC — Stone
+
+## Description
+This fictional desk charging pad is intended for daily commuting. It has wireless standard of Qi-compatible receiver and input connector of micro-USB.
+
+## Specifications
+- Wireless standard: Qi-compatible receiver.
+- Input connector: micro-USB.
+- Finish: Stone.
+- Intended use: daily commuting.
+
+## Selection advice
+Verify wireless receiving capability on the actual device; a USB charging port alone is not evidence of wireless charging.
+
+## Handling and care
+Remove loose metal objects and wipe the pad dry before connecting external power.
+
+## Limitations
+A wall adapter is not included, and no specific charging speed is guaranteed.
+
+## Product-specific questions
+### What are its wireless standard and input connector?
+Wireless standard: Qi-compatible receiver. Input connector: micro-USB.
+
+### Is this configuration suitable for my intended use?
+Verify wireless receiving capability on the actual device; a USB charging port alone is not evidence of wireless charging. A wall adapter is not included, and no specific charging speed is guaranteed.
