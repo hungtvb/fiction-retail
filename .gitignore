@@ -1,0 +1,12 @@
+__pycache__/
+.pytest_cache/
+*.pyc
+.env
+.venv/
+.generated/
+*.sqlite
+*.sqlite3
+fiction-retail.db
+reports/
+!data/fiction-retail.db
+!data/fiction_retail.sqlite

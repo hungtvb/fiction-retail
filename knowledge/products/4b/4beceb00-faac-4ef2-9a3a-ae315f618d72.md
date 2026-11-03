@@ -1,0 +1,26 @@
+# Harbor Insulated Sports Bottle 4BECEB00 — Copper
+
+## Description
+Harbor Insulated Sports Bottle 4BECEB00 — Copper is a fictional option for home training. It has capacity of 650 mL and lid of flip spout.
+
+## Specifications
+- Capacity: 650 mL.
+- Lid: flip spout.
+- Color: Copper.
+- Intended use: home training.
+
+## Selection advice
+Compare capacity and lid shape with the intended activity and bottle holder.
+
+## Handling and care
+Hand-wash lid parts and dry completely before storage.
+
+## Limitations
+Insulation duration and leakproof performance are not certified.
+
+## Product-specific questions
+### What are its capacity and lid?
+Capacity: 650 mL. Lid: flip spout.
+
+### Is this configuration suitable for my intended use?
+Compare capacity and lid shape with the intended activity and bottle holder. Insulation duration and leakproof performance are not certified.

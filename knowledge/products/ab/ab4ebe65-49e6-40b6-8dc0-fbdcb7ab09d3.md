@@ -1,0 +1,26 @@
+# Pine Portable Bluetooth Speaker AB4EBE65 — Copper
+
+## Description
+This fictional portable bluetooth speaker is intended for short trips. Its rated playback is 14 hours; its charging connector is USB-C.
+
+## Specifications
+- Rated playback: 14 hours.
+- Charging connector: USB-C.
+- Finish: Copper.
+- Intended use: short trips.
+
+## Selection advice
+Check that the playback device can send Bluetooth audio and that the rated endurance suits the session.
+
+## Handling and care
+Charge with a compatible low-voltage supply and wipe the enclosure dry before storage.
+
+## Limitations
+The playback rating varies with volume; no waterproof or microphone rating is supplied.
+
+## Product-specific questions
+### What are its rated playback and charging connector?
+Rated playback: 14 hours. Charging connector: USB-C.
+
+### Is this configuration suitable for my intended use?
+Check that the playback device can send Bluetooth audio and that the rated endurance suits the session. The playback rating varies with volume; no waterproof or microphone rating is supplied.

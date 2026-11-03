@@ -1,0 +1,26 @@
+# Cove Decorative Cushion ABBD16DE — Copper
+
+## Description
+Cove Decorative Cushion ABBD16DE — Copper is a fictional decorative cushion for a home office. The stated configuration pairs dimensions of 40 × 40 cm with cover of polyester weave.
+
+## Specifications
+- Dimensions: 40 × 40 cm.
+- Cover: polyester weave.
+- Finish: Copper.
+- Intended use: a home office.
+
+## Selection advice
+Compare dimensions and firmness with the chair or sofa rather than relying on a photograph.
+
+## Handling and care
+Spot-clean the cover according to its label and keep the filling dry.
+
+## Limitations
+This is a home cushion, not a certified orthopedic support.
+
+## Product-specific questions
+### What are its dimensions and cover?
+Dimensions: 40 × 40 cm. Cover: polyester weave.
+
+### What should I confirm before ordering Cove Decorative Cushion ABBD16DE — Copper?
+Compare dimensions and firmness with the chair or sofa rather than relying on a photograph. This is a home cushion, not a certified orthopedic support.

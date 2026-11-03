@@ -1,0 +1,26 @@
+# Haven Light Outer Jacket ACD5BC2A — Slate
+
+## Description
+Configured for weekend wear, Haven Light Outer Jacket ACD5BC2A — Slate is a fictional catalog item. It has cut of hip length and shell of polyester woven.
+
+## Specifications
+- Cut: hip length.
+- Shell: polyester woven.
+- Color: Slate.
+- Intended use: weekend wear.
+
+## Selection advice
+Try the jacket over the clothing likely to be worn beneath it and check shoulder movement.
+
+## Handling and care
+Close fasteners before washing and air-dry according to the garment label.
+
+## Limitations
+Wind resistance does not establish waterproofing or sealed seams.
+
+## Product-specific questions
+### What are its cut and shell?
+Cut: hip length. Shell: polyester woven.
+
+### How do I choose this light outer jacket?
+Try the jacket over the clothing likely to be worn beneath it and check shoulder movement. Wind resistance does not establish waterproofing or sealed seams.

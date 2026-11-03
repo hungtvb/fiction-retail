@@ -1,0 +1,26 @@
+# Harbor USB Desk Lamp A7CDCBE3 — Ink
+
+## Description
+This fictional usb desk lamp is intended for a shared living space. The stated configuration pairs input power of 5 V USB, 6 W with shade of fixed shade.
+
+## Specifications
+- Input power: 5 V USB, 6 W.
+- Shade: fixed shade.
+- Finish: Ink.
+- Intended use: a shared living space.
+
+## Selection advice
+Verify the available USB supply and position the lamp to limit screen glare.
+
+## Handling and care
+Disconnect power before cleaning the shade and cable.
+
+## Limitations
+Wattage is electrical input, not a measured brightness or dimming guarantee.
+
+## Product-specific questions
+### What are its input power and shade?
+Input power: 5 V USB, 6 W. Shade: fixed shade.
+
+### How do I choose this usb desk lamp?
+Verify the available USB supply and position the lamp to limit screen glare. Wattage is electrical input, not a measured brightness or dimming guarantee.

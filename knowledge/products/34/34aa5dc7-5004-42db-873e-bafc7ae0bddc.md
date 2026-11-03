@@ -1,0 +1,26 @@
+# Alder Art Activity Kit 34AA5DC7 — Olive
+
+## Description
+This fictional art activity kit is intended for a family activity. The stated configuration pairs included media of colored pencils and cards with age guidance of 6 years and up.
+
+## Specifications
+- Included media: colored pencils and cards.
+- Age guidance: 6 years and up.
+- Colorway: Olive.
+- Intended use: a family activity.
+
+## Selection advice
+Check that the included media suit the work surface and the child’s age.
+
+## Handling and care
+Close markers or store pencils after use; protect tables before drawing.
+
+## Limitations
+Adult supervision may be needed; stain removal is not guaranteed.
+
+## Product-specific questions
+### What are its included media and age guidance?
+Included media: colored pencils and cards. Age guidance: 6 years and up.
+
+### Is this configuration suitable for my intended use?
+Check that the included media suit the work surface and the child’s age. Adult supervision may be needed; stain removal is not guaranteed.

@@ -1,0 +1,26 @@
+# Noma Everyday Data Handbook A1135CC2 — Terracotta
+
+## Description
+Noma Everyday Data Handbook A1135CC2 — Terracotta is a fictional everyday data handbook for a practical gift. Its page count is 184 pages; its format is worked-example paperback.
+
+## Specifications
+- Page count: 184 pages.
+- Format: worked-example paperback.
+- Cover: Terracotta.
+- Intended use: a practical gift.
+
+## Selection advice
+Check the table of contents for the desired software or statistical method before purchase.
+
+## Handling and care
+Keep pages away from moisture and use a bookmark rather than folding exercises.
+
+## Limitations
+No software license, dataset download, or automatic edition update is included.
+
+## Product-specific questions
+### What are its page count and format?
+Page count: 184 pages. Format: worked-example paperback.
+
+### What should I confirm before ordering Noma Everyday Data Handbook A1135CC2 — Terracotta?
+Check the table of contents for the desired software or statistical method before purchase. No software license, dataset download, or automatic edition update is included.

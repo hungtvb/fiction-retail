@@ -1,0 +1,26 @@
+# Brook Ceramic Coffee Mug DCCEBFFD — Olive
+
+## Description
+Configured for a shared living space, Brook Ceramic Coffee Mug DCCEBFFD — Olive is a fictional catalog item. Its nominal capacity is 320 mL; its finish is matte glaze.
+
+## Specifications
+- Nominal capacity: 320 mL.
+- Finish: matte glaze.
+- Finish: Olive.
+- Intended use: a shared living space.
+
+## Selection advice
+Check capacity and handle clearance against the intended drink and cupboard space.
+
+## Handling and care
+Hand-wash gently and inspect for chips before use.
+
+## Limitations
+Microwave, oven, and dishwasher safety are not certified in this profile.
+
+## Product-specific questions
+### What are its nominal capacity and finish?
+Nominal capacity: 320 mL. Finish: matte glaze.
+
+### How do I choose this ceramic coffee mug?
+Check capacity and handle clearance against the intended drink and cupboard space. Microwave, oven, and dishwasher safety are not certified in this profile.

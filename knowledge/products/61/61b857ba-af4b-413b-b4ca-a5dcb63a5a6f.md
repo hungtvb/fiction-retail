@@ -1,0 +1,26 @@
+# Noma Dried Fruit Mix 61B857BA — Olive
+
+## Description
+Noma Dried Fruit Mix 61B857BA — Olive is a fictional dried fruit mix for a shared snack table. Its net weight is 200 g; its blend is mixed tropical fruit.
+
+## Specifications
+- Net weight: 200 g.
+- Blend: mixed tropical fruit.
+- Package color: Olive.
+- Intended use: a shared snack table.
+
+## Selection advice
+Check the full ingredient list for sulfites, added sugar, and the actual fruit mix.
+
+## Handling and care
+Keep the pack sealed in a dry place after opening.
+
+## Limitations
+No sugar-free or allergen-free claim is made.
+
+## Product-specific questions
+### What are its net weight and blend?
+Net weight: 200 g. Blend: mixed tropical fruit.
+
+### How do I choose this dried fruit mix?
+Check the full ingredient list for sulfites, added sugar, and the actual fruit mix. No sugar-free or allergen-free claim is made.
