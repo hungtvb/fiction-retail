@@ -1,44 +1,38 @@
 # Fiction Retail — Data Contract
 
-Fiction is a synthetic retail business. Business documents are written for store employees; source IDs, creation provenance and checksums live in structured data rather than prose.
+The released runtime is `data/fiction_retail.sqlite`. It combines the ten immutable-source tables and 17 synthetic-extension tables without changing business IDs, transaction counts, monetary amounts, statuses, or row grain. This is a fictional educational dataset, not evidence of a live retailer. The original `data/fiction-retail.db` remains byte-for-byte unchanged with SHA-256 `9f95373e46219e880ae54f995b6f2c2c439c3746e500e484fe3ab2bf9ac55754`.
 
-## Canonical identity and dated catalog
+## Time and provenance
 
-- The immutable upstream `fiction-retail.db` retains all **5,000 original products** with their original names, import prices and weights; the source is not a clean retail catalog.
-- `product_enrichment` provides 50 curated product titles and types, each linked through the **same original `product_id`**. Since the original import names do not describe real product types, this is an explicit **fictional merchandising interpretation**, not a claim about manufacturers or historical SKU attributes.
-- For these 50 entries, `curated_list_price_usd` and `curated_shipping_weight_kg` are internally plausible *synthetic business values*, **valid from 2024-05-01 (inclusive) to 2024-06-01 (exclusive)**. The prices/weights are fixed in `scripts/merchandising.py`. Do not confuse them with undated import `products.price`/`products.weight_kg` or earlier orders.
-- A date-sensitive catalog lookup must check `catalog_effective_from <= :as_of < catalog_effective_to`. Outside that period, the curated offer is **not available**. Do not substitute a future price into April sales or April order investigations.
-- Transaction facts use `order_items.unit_price`, quantity and line discounts at the relevant order date; these are historical transaction values. Comparing them directly against the May-2024 curated list price is **not** a valid historical price-variance or profit calculation.
-- All 5,000 original IDs have a distinct fictional product guide in `knowledge/products/`, indexed by `knowledge_documents` in v0.4. The 4,950 new guides are not assertions about historical or manufacturer attributes. Only 50 products have a separately curated list price and packed weight; the remaining guides do not create a dated price offer.
+- Fixed business reference: **2026-11-03T00:00:00+07:00**, `Asia/Ho_Chi_Minh`. This is an as-of boundary, not a file creation time or proof of live refresh. The manifest records `build_generated_at_utc` separately.
+- The latest observed business date across source and extension is 2024-04-30. The transformation shifts ISO dates and timestamp date prefixes forward **916 days**, making the latest observed date 2026-11-02. Time of day, fractional precision, UTC suffix/offset, event ordering, and durations are preserved.
+- Source order dates translate from `[2023-01-01, 2024-04-30]` to `[2025-07-05, 2026-11-02]`. Catalog and policy *validity intervals* receive the same offset but are not counted as observed historical events. A future validity end is not a future completed transaction.
+- `sales_targets.month` is the **start-month cohort label** `2026-10`; the exact translated target window is `period_start = 2026-10-04` to `period_end = 2026-11-03` (exclusive). It crosses calendar months. KPI queries must use these boundaries and must not treat `month` as a complete October calendar month.
+- Source facts retain `upstream_source` provenance. Extension rows, product guides, policies, curated offers and generated SKUs are `scenario_generated`. Rebasing dates changes neither provenance nor freshness.
 
-Example when the baseline and extension are attached to one SQLite connection:
+## Product identity and catalog
 
-```sql
-SELECT p.product_id, e.synthetic_display_name AS display_name,
-       e.curated_list_price_usd AS list_price_usd,
-       e.curated_shipping_weight_kg AS packed_weight_kg,
-       e.catalog_effective_from, e.catalog_effective_to
-FROM source.products AS p
-JOIN extension.product_enrichment AS e ON e.product_id = p.product_id
-WHERE :as_of >= e.catalog_effective_from
-  AND :as_of < e.catalog_effective_to;
-```
+- `products.product_id` is the canonical database key. Every product has one unique, non-null Fiction-generated `sku`: `FR-` plus the first 16 uppercase hexadecimal characters of SHA-256(`product_id`). The builder checks collisions and never derives SKU from insertion order. It is not a GTIN, UPC, manufacturer code, variant, or evidence of a real listing.
+- The original 5,000 import names, `products.price`, and `weight_kg` remain as recorded. Most names are poor merchandise labels. Import price and weight have no effective dates.
+- `product_enrichment` contains 50 explicitly fictional interpreted products with a dated list price and packed shipping weight for `[2026-11-03, 2026-12-04)`. The other 4,950 products have no curated price. Use `catalog_effective_from <= :as_of AND :as_of < catalog_effective_to`; never backfill that price into historical `order_items`.
+- All 5,000 product guides remain individually authored Markdown documents. They link to SQL through `knowledge_documents.product_id → products.product_id → products.sku`; RAG product metadata includes both IDs. Guide characteristics are fictional support content, not verified manufacturer specifications.
 
-## Business facts and scope
+## Money, orders and returns
 
-- **Sales:** 564 assisted-sales opportunities, linked to real historical customer/order IDs when won. These are synthetic assisted-attribution scenarios, not proof of a real employee's performance.
-- **Fulfillment:** 100 scoped April-2024 backorder cases with invented, timestamped stock evidence. They are **not** a complete warehouse inventory ledger. Do not infer present stock or global stock histories from a case-specific snapshot.
-- **Pricing:** 20 selected SKUs have May-2024 unit costs and both margin/discount bounds. `product_pricing_constraints.policy_id = FR-PRICE-2024-05`, matching its company policy document. Proposed prices are not approved or executed sales.
-- **Warehouse rules:** `fulfillment_policies.policy_id = FR-WH-2024-04`, matching the Warehouse Inventory Transfer Policy document, including the 24-hour stock-evidence limit and manager review.
-- **Returns:** The April-2024 Returns & Refunds Policy is a hypothetical Fiction company rule. Actual baseline returns can contain refund anomalies, and order/return records alone do not prove approval or completion of payment.
-- **Knowledge:** 5,000 individual product guides and three company policies. The first 50 guides include ten deeper selection/troubleshooting references. The guides contain no AI/RAG instructions, checksums or provenance metadata; those live in the database and corpus metadata.
+- Currency is USD. `orders.total_amount` is recorded order value, not settled revenue. `order_items.unit_price` is historical transaction price; `discount_pct` is integer percentage points. All 150,000 orders reconcile with their lines within USD 0.02 in the source audit.
+- `delivered` is fulfillment status, not payment settlement. A `returns` row records a requested/processed return amount; it does not prove payment approval or payout. The 140 refunds above order value and 350 above the returned product's order-line net value remain visible for reconciliation.
+- `promotions.applies_to_category='all'` is the actual unrestricted sentinel. The 16,995 category-specific promo links lacking an eligible order item remain recorded. Validate eligibility against order lines before campaign attribution; the rebase does not repair assignment logic.
 
-## Source ownership and publishing
+## Inventory, cases and policies
 
-- `knowledge/products/` is the **editable source** for v0.4 product guides. `scripts/build_v04.py` reads and hashes one file per original product ID; it does not render guides from a common template. The original 50 curated files must remain byte-for-byte aligned with the v0.3 builder until their authoring source and v0.3 release are changed together. Policy text remains owned by `scripts/business_policies.py`.
-- The `knowledge_documents` table maps source IDs and policy IDs to document SHA-256 hashes. `manifest.json` records the repository distribution hashes. Technical lineage stays in structured data rather than business prose.
-- The unchanged original SQLite database, v0.4 runtime SQLite, individual Markdown files, JSONL RAG corpus, and manifest are committed. `data/fiction-retail.db` uses Git LFS. Evaluation ground truth and RetailIQ-specific reports are not committed.
-- `scripts/build_agent_dataset.py` packages the source SQLite, v0.4 extension, 5,003 Markdown documents and JSONL RAG corpus. Its 5,000 source-product cards contain only actual import fields; its 50 curated-offer cards are visibly synthetic and dated. The corpus also contains one self-contained chunk per product guide, policy sections and schemas. See [agent dataset usage](AGENT_DATASET.md).
-- All documentation, product characteristics, prices, costs and policies created by this extension are **fictional**. They are not verified manufacturer facts, real customer agreements or production security controls.
+- Base `inventory` has no observation timestamp. `last_restocked_date` is not a stock snapshot time. All 15 warehouses have nominal capacity below summed on-hand rows in the source. Do not treat this as verified live available stock or use capacity for automated transfer decisions.
+- `inventory_snapshots_v2` and `operational_events` describe 100 selected synthetic fulfillment investigations, not an enterprise-wide inventory ledger. At a case's `evidence_cutoff_reached`, use only observations whose `received_at` and `observed_at` are no later than the cutoff; check the 24-hour freshness limit and warehouse eligibility. A qualifying result is a proposal requiring manager approval.
+- The released cases contain zero snapshots with `received_at` after their case cutoff. The dataset therefore cannot demonstrate a real late-arrival exclusion outcome; the two-timestamp cutoff rule remains required for queries and future data.
+- The warehouse and returns policies are valid for `[2026-10-04, 2026-11-03)`, with IDs `FR-WH-2026-10-04` and `FR-RET-2026-10-04`. The pricing policy `FR-PRICE-2026-11-03` and 20 cost/discount constraints apply to `[2026-11-03, 2026-12-04)`. These dates are translated historical/synthetic intervals, not newly negotiated real policies.
+- Pricing margin is calculated on the proposed selling price; the discount cap is measured against the dated curated list price. Passing numerical limits does not constitute approval.
 
-Further fictional attributes must be visibly marked as authored assumptions and linked to an original product ID. Do not backfill them into source transaction records.
+## Release and access
+
+The unified file enforces PK, FK, and supported UNIQUE constraints with `PRAGMA foreign_keys=ON` during build; applications should enable that pragma on write connections. `PRAGMA integrity_check` and `PRAGMA foreign_key_check` are required release gates. `manifest.json` records the database file SHA-256, a canonical content checksum stored in `metadata.output_checksum`, the RAG hash, table counts, and retained quality findings. The content checksum excludes its own row to avoid a self-reference; `build_generated_at_utc` is intentionally outside the database so the binary can be reproduced.
+
+The repository contains data and retrieval material. It does not provide live stock, settlement evidence, delivery promises, a vector index, an agent runtime, or application-specific SQL authorization. See [usage](AGENT_DATASET.md), [schema](SCHEMA.md), and [source audit](SOURCE_DB_AUDIT.md).

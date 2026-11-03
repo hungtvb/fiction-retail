@@ -80,3 +80,9 @@ WHERE r.refund_amount > v.value_usd + 0.01;
 ## Use in the agent dataset
 
 For promotion eligibility, join to actual order lines and product categories; if the recorded promotion has no eligible item, report the inconsistency rather than asserting a valid discount. For refunds, present recorded amounts and request reconciliation rather than marking payment complete or fraudulent. For stock, use only the separately timestamped, case-scoped extension evidence under its policy; neither the source inventory nor the capacity totals establish available stock today. See the [schema reference](SCHEMA.md) and [agent dataset guide](AGENT_DATASET.md).
+
+## Normalized November 2026 release
+
+The standalone `data/fiction_retail.sqlite` is derived from this unchanged source plus the synthetic v0.4 extension. It translates dates by 916 days, adds PK/FK/UNIQUE enforcement, selected indexes, and one deterministic Fiction-generated SKU per product. It does **not** alter amounts, status, source IDs, or any of the anomalies above. The release builder independently rechecks the four key issue counts and fails if they differ: 16,995 promotion-category mismatches, 15 warehouses above nominal capacity, 140 refund amounts above order value, and 350 above the returned product's line value. The new `manifest.json` carries these counts under `data_quality` and publishes the output/database and RAG hashes.
+
+The business reference date, 2026-11-03 in Asia/Ho_Chi_Minh, is a fixed analytical cutoff. Rebasing is a translation of a fictional historical snapshot; it is not evidence that inventory, payments, promotions or policies were observed in November 2026. The original source SHA-256 at the top of this audit remains the provenance anchor.
