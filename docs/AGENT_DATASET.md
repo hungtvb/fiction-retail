@@ -1,120 +1,78 @@
 # Fiction Retail Agent Dataset
 
-**Scope:** A repository distribution of the public Fiction Retail SQLite database, this repository's v0.4 extension, and a grounded RAG corpus. All business data is fictional and intended for education. The [DataHub source description](https://github.com/datahub-project/static-assets/blob/main/datasets/fiction-retail/README.md) identifies the ten-table source database and its CC0 license. See the [schema reference](SCHEMA.md) for all 27 tables and the [data contract](DATA_CONTRACT.md) for identity, provenance, and temporal limits.
+**Release:** `fiction-retail-unified-v1.0.0`. The business reference date is **2026-11-03 in Asia/Ho_Chi_Minh**. The dataset is fictional and rebased; it is not live retail data.
 
-## Repository files
+## Files and ownership
 
-| Path | Contents | Role |
-|---|---|---|
-| `data/fiction-retail.db` | Original ten-table SQLite database; 150,000 orders and 5,000 products | Historical facts within the fictional source dataset |
-| `data/fiction_runtime_v04.sqlite` | Seventeen extension tables; 50 dated offers, 20 pricing constraints, 100 fulfillment cases, 564 sales opportunities, and an index of 5,000 guides | Synthetic scenarios linked to original IDs |
-| `knowledge/products/**/*.md` | 5,000 individual product guides | Fictional customer-support knowledge |
-| `knowledge/policies/*.md` | Three company policies | Fictional, dated business rules |
-| `rag/chunks.jsonl` | 10,093 chunks with IDs, sources, provenance, and validity intervals | Input for keyword or vector retrieval |
-| `manifest.json` | File hashes and counts | Release verification |
+| Path | Purpose |
+|---|---|
+| `data/fiction_retail.sqlite` | Standalone 27-table runtime for SQL applications |
+| `data/fiction-retail.db` | Immutable ten-table upstream source for provenance and rebuilds |
+| `knowledge/products/**/*.md` | 5,000 individually authored fictional product guides |
+| `knowledge/policies/*.md` | Three fictional policies with translated effective dates |
+| `rag/chunks.jsonl` | 10,093 English retrieval records |
+| `manifest.json` | File hashes, table and chunk counts, offset, as-of time, and preserved quality findings |
 
-`data/fiction-retail.db` is tracked with Git LFS because it is approximately 95 MiB. Install Git LFS before cloning or run `git lfs pull` after cloning; a pointer file is not a usable SQLite database. The other database and JSONL are regular Git files. The original source is retained byte-for-byte; the extension holds the authored changes.
+The source and unified SQLite files are tracked with Git LFS. Run `git lfs pull` after cloning. The former v0.4 sidecar is an internal build stage; applications connect only to the unified runtime.
 
-## Code and current implementation
+## Rebuild
 
-`scripts/generate_extension.py` creates v0.1 sales and fulfillment scenarios. `scripts/build_v02.py` adds the first 50 curated guides and operational evidence. `scripts/build_v03.py` adds dated offers and pricing constraints, then removes scenario labels and precomputed fulfillment decisions from the runtime. `scripts/rebuild_pack.py` runs those three builders in sequence. `scripts/build_v04.py` indexes one committed Markdown guide for each of the 5,000 original product IDs, checks that the original 50 guides still match v0.3, and records document hashes in SQLite. `scripts/build_agent_dataset.py` verifies the baseline and document hashes before packaging the databases and RAG corpus. None of these builders modifies the source database.
-
-The Markdown files under `knowledge/products/` are the editable source for product knowledge in v0.4. Each product has a separate file; the build indexes these files rather than writing a common template over them. The 4,950 new profiles are deliberately fictional catalog interpretations of source IDs whose import names do not describe merchandise. They are suitable for a synthetic agent exercise, not for claims about manufacturers or historical orders. A [product authoring note](PRODUCT_AUTHORING.md) describes quality checks and editing.
-
-The repository provides data and ingestion material. It does not include a vector index, embedding model, SQL tool, agent runtime, interface, or RAG benchmark. Passing the data checks below does not establish answer quality.
-
-## Rebuild and publish
-
-Requirements: Python 3.12+ and Git LFS. No Python packages are required. From the repository root:
+Use Python 3.12+ and Git LFS. The existing pipeline runs v0.1, v0.2, v0.3, and v0.4 in order, adds all authored guides, then builds the unified release and RAG corpus.
 
 ```powershell
-New-Item -ItemType Directory -Force .generated/source | Out-Null
-curl.exe -L --fail --silent --show-error "https://raw.githubusercontent.com/datahub-project/static-assets/main/datasets/fiction-retail/fiction-retail.db" -o .generated/source/fiction-retail.db
-(Get-FileHash .generated/source/fiction-retail.db -Algorithm SHA256).Hash
-python -m scripts.rebuild_pack --source .generated/source/fiction-retail.db --output-dir .generated/fiction-v03
-python -m scripts.build_v04 --source .generated/source/fiction-retail.db --v03 .generated/fiction-v03/data/fiction_runtime_v03.sqlite --knowledge knowledge --output .generated/fiction-v04/data/fiction_runtime_v04.sqlite
-python -m scripts.build_agent_dataset --source .generated/source/fiction-retail.db --runtime .generated/fiction-v04/data/fiction_runtime_v04.sqlite --knowledge knowledge --output-dir .generated/agent-dataset-v04
-Copy-Item .generated/agent-dataset-v04/data/fiction-retail.db data/fiction-retail.db -Force
-Copy-Item .generated/agent-dataset-v04/data/fiction_runtime_v04.sqlite data/fiction_runtime_v04.sqlite -Force
-Copy-Item .generated/agent-dataset-v04/rag/chunks.jsonl rag/chunks.jsonl -Force
-Copy-Item .generated/agent-dataset-v04/manifest.json manifest.json -Force
+python -m scripts.rebuild_pack --unified --source data/fiction-retail.db --product-guides knowledge/products --output-dir .generated/release
 ```
 
-The required source SHA-256 is `9f95373e46219e880ae54f995b6f2c2c439c3746e500e484fe3ab2bf9ac55754`. Builders stop on an unexpected source rather than silently consuming a changed upstream file. Output directories must be absent or empty before rebuilding. The generated Markdown files must match the tracked `knowledge/` files byte-for-byte; if the authoring scripts change, update the tracked documents as part of the same change.
+The output directory must be absent or empty. The builder checks the immutable source SHA-256 before writing. To publish a verified build, copy `.generated/release/data/fiction_retail.sqlite`, `.generated/release/knowledge/policies/`, `.generated/release/rag/chunks.jsonl`, and `.generated/release/manifest.json` to the corresponding repository paths. The 5,000 product guides stay editable in `knowledge/products/`. Rebuilding from the same inputs yields the same database and RAG content hashes; `build_generated_at_utc` in the manifest records the separate build time and is expected to change.
 
-## Query the two databases
+Run `python -m unittest discover -s tests -v` to rebuild independently and compare the database, canonical content, RAG, and policy document hashes with the published artifact. The full integration test processes more than 700,000 rows and 5,003 Markdown documents, so it takes several minutes on a typical desktop. Inspect `manifest.json` for `input_table_counts` and `table_counts` across all 27 tables, 15 zero-violation validation checks, and the four retained source-quality findings; a passing build does not erase those findings.
 
-Open both databases read-only and join by original IDs:
+## Query one database
 
 ```python
-from pathlib import Path
 import sqlite3
 
-root = Path('.').resolve()
-db = sqlite3.connect('file::memory:?cache=private', uri=True)
-db.execute('ATTACH DATABASE ? AS source',
-           ((root / 'data/fiction-retail.db').as_uri() + '?mode=ro',))
-db.execute('ATTACH DATABASE ? AS extension',
-           ((root / 'data/fiction_runtime_v04.sqlite').as_uri() + '?mode=ro',))
-
-as_of = '2024-05-15'
-rows = db.execute('''
-    SELECT p.product_id, e.synthetic_display_name, e.curated_list_price_usd
-    FROM source.products AS p
-    JOIN extension.product_enrichment AS e USING (product_id)
-    WHERE ? >= e.catalog_effective_from AND ? < e.catalog_effective_to
-    ORDER BY e.synthetic_display_name
-''', (as_of, as_of)).fetchall()
-print(len(rows))  # 50
+db = sqlite3.connect('file:data/fiction_retail.sqlite?mode=ro', uri=True)
+db.execute('PRAGMA foreign_keys=ON')
+as_of = '2026-11-03'
+sku = db.execute('SELECT sku FROM products ORDER BY product_id LIMIT 1').fetchone()[0]
+rows = db.execute("""
+    SELECT p.product_id, p.sku, e.synthetic_display_name,
+           e.curated_list_price_usd, k.relative_path AS guide_path
+    FROM products p
+    LEFT JOIN product_enrichment e ON e.product_id = p.product_id
+      AND e.catalog_effective_from <= ? AND ? < e.catalog_effective_to
+    JOIN knowledge_documents k ON k.product_id = p.product_id
+      AND k.kind = 'product_guide'
+    WHERE p.sku = ?
+""", (as_of, as_of, sku)).fetchall()
 ```
 
-`products.price` and `products.weight_kg` are undated import fields. The synthetic `curated_list_price_usd` and `curated_shipping_weight_kg` apply only from 2024-05-01 inclusive to 2024-06-01 exclusive. Do not apply those values to April orders. For historical order value, use `orders.total_amount` or `order_items.quantity * unit_price * (1 - discount_pct / 100)` at the transaction date.
+The SKU is a Fiction-generated business identifier; `product_id` remains the database identity and all foreign keys continue to use it. Only 50 products have a dated curated list price. The other 4,950 guides do not create a price or verified manufacturer specification.
 
-## RAG record contract
+## RAG contract
 
-Each JSONL line is one object:
+Each JSONL line contains `chunk_id`, `kind`, `text`, `text_sha256`, `source_id`, `source_ref`, `provenance`, `valid_from`, `valid_to`, and `metadata`. Product records and guides carry both `product_id` and `sku` in metadata. Validity intervals are half-open: `valid_from <= as_of < valid_to`. A null interval means unknown validity, never an active offer. Use `source_ref` for citations.
 
-| Field | Usage |
-|---|---|
-| `chunk_id` | Stable deduplication and tracing key |
-| `kind` | `source_product`, `curated_offer`, `product_guide`, `business_policy`, or `table_schema` |
-| `text` | English content for embedding and cited answers |
-| `source_id`, `source_ref` | Original ID, table, or document reference to return as a citation |
-| `provenance` | `upstream_source` or `scenario_generated` |
-| `valid_from`, `valid_to` | Half-open interval `[from, to)`; `null` means unknown validity, **not** currently active |
-| `metadata` | Product/policy IDs, section title, category, or SQL table |
-| `text_sha256` | Integrity check for the chunk text |
-
-Embed `text`, keep metadata as filterable fields, and return `source_ref` in citations. Filter by `kind`, exact product or policy ID, and the requested date before generating an answer. The 5,000 `source_product` cards contain literal import fields only. They do not substantiate compatibility, materials, or a current offer. All 5,000 product IDs have an individual fictional guide. Only 50 have a separately curated, dated list price and packed weight. Guides and offers are scoped to May 2024; the returns and warehouse policies are scoped to April 2024, and the pricing policy to May 2024. Do not extend any of these policies into the present.
+| Kind | Chunks | Use |
+|---|---:|---|
+| `source_product` | 5,000 | Literal imported fields and Fiction SKU; import price is undated |
+| `curated_offer` | 50 | Dated synthetic list prices and packed weights |
+| `product_guide` | 5,000 | Individual fictional selection/support prose |
+| `business_policy` | 16 | Sections from three dated policy documents |
+| `table_schema` | 27 | Unified table columns and row counts |
 
 ```python
 import json
-from pathlib import Path
-
-with Path('rag/chunks.jsonl').open(encoding='utf-8') as stream:
-    chunks = [json.loads(line) for line in stream]
-as_of = '2024-05-15'
-eligible = [c for c in chunks
-            if c['kind'] in {'curated_offer', 'product_guide', 'business_policy'}
-            and c['valid_from'] is not None
-            and c['valid_from'] <= as_of < c['valid_to']]
+with open('rag/chunks.jsonl', encoding='utf-8') as stream:
+    chunks = (json.loads(line) for line in stream)
+    as_of = '2026-11-03'
+    eligible = [c for c in chunks
+                if c['kind'] in {'curated_offer', 'product_guide', 'business_policy'}
+                and c['valid_from'] is not None
+                and c['valid_from'] <= as_of < c['valid_to']]
 ```
 
-## Agent routing and controls
+Query SQLite for orders, money, stock evidence, and eligibility. RAG explains catalog and policy context but does not prove a transaction amount or live status. The warehouse and returns policies end before the 2026-11-03 reference date; do not call them current. The price policy and 50 curated offers begin on that date solely because their prior dated period was translated by the same 916-day offset. Case-scoped stock observations still do not establish company-wide stock. Customer identity rows are not included in RAG; restrict SQL access in any application.
 
-1. **Orders, amounts, returns, stock, prices, and eligibility:** query the SQLite databases with parameterized, read-only SQL. RAG can supply definitions and policies, but it is not the source of transaction values. Check the [source DB audit](SOURCE_DB_AUDIT.md) before interpreting promotions, warehouse capacity, or refunds.
-2. **Product selection and support:** retrieve the individual guide by product ID or its fictional display name, then cite `source_ref`. State that the guide is fictional; do not equate its specifications with original manufacturer facts. For price, only the 50 dated offers have a synthetic curated list price.
-3. **Policies:** filter `business_policy` by the question's `as_of` date. Outside its interval, do not call a policy current.
-4. **Warehouse transfer and price proposals:** use case-specific evidence or dated pricing constraints with the matching policy. A qualifying result is a proposal requiring manager approval, never an executed change.
-5. **Customer data:** `customers` contains fictional names, emails, and phone numbers. Customer rows are excluded from the RAG corpus; enforce access restrictions in any SQL tool rather than embedding them.
-
-The source `inventory` table has no snapshot timestamp. The extension's 100 timestamped cases do not form a company-wide inventory ledger. Neither database can establish stock in 2026.
-
-## Verification
-
-```powershell
-python -m unittest discover -s tests -v
-python -c "import json,pathlib; m=json.loads(pathlib.Path('manifest.json').read_text()); print(m['rag_chunk_count'],m['source_product_count'],m['knowledge_document_count'])"
-```
-
-The expected counts for this release are `10093 5000 5003`. Compare the SHA-256 values in `manifest.json` with the three published data files after cloning. The builder also runs SQLite integrity checks and verifies each knowledge document hash.
+See [the data contract](DATA_CONTRACT.md), [unified schema](SCHEMA.md), and [source audit](SOURCE_DB_AUDIT.md) for exact semantics and retained anomalies.

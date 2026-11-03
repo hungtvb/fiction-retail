@@ -9,4 +9,4 @@ __pycache__/
 fiction-retail.db
 reports/
 !data/fiction-retail.db
-!data/fiction_runtime_v04.sqlite
+!data/fiction_retail.sqlite

@@ -1,6 +1,6 @@
 # Fiction Retail: Business and Data Assessment
 
-**Business status:** Fiction Retail is a synthetic e-commerce business for analysis and education, not a live retailer. The [DataHub source](https://github.com/datahub-project/static-assets/blob/main/datasets/fiction-retail/README.md) is a ten-table SQLite database with SHA-256 `9f95373e46219e880ae54f995b6f2c2c439c3746e500e484fe3ab2bf9ac55754`. Source orders run from **2023-01-01 through 2024-04-30**. These figures do not describe 2026 operations.
+**Business status:** Fiction Retail is a synthetic e-commerce business for analysis and education, not a live retailer. The [DataHub source](https://github.com/datahub-project/static-assets/blob/main/datasets/fiction-retail/README.md) is a ten-table SQLite database with SHA-256 `9f95373e46219e880ae54f995b6f2c2c439c3746e500e484fe3ab2bf9ac55754`. Source orders run from **2023-01-01 through 2024-04-30**. This analysis reports the unchanged source-era business measures. The unified runtime translates these dates forward by 916 days (through 2026-11-02) without adding transactions or proving live 2026 operations; a calendar-month comparison in this document must be remapped to exact translated date boundaries before use on the unified database.
 
 ## Business model represented
 

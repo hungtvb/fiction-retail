@@ -1,139 +1,137 @@
-# Fiction Retail SQLite Schema Reference
+# Fiction Retail Unified SQLite Schema
 
-**Release:** `fiction-retail-agent-dataset-v2` on branch `data/fiction-course-v0.3`. This reference was checked against `data/fiction-retail.db` and `data/fiction_runtime_v04.sqlite`. Row counts describe this released snapshot, not a live service. Both databases contain fictional data. See [AGENT_DATASET.md](AGENT_DATASET.md) for read-only connection examples and [DATA_CONTRACT.md](DATA_CONTRACT.md) for provenance and date limits.
-
-## Database boundaries
-
-| SQLite file | Attach alias | Tables | Ownership |
-|---|---|---:|---|
-| `data/fiction-retail.db` | `source` | 10 | Unchanged [DataHub source](https://github.com/datahub-project/static-assets/blob/main/datasets/fiction-retail/README.md) |
-| `data/fiction_runtime_v04.sqlite` | `extension` | 17 | Synthetic scenarios, dated catalog values, and guide index authored in this repository |
-
-The source tables have **no declared SQLite primary or foreign keys and no persistent indexes**. Their ID columns are logical keys: each of the ten table ID columns was unique in this release. The extension declares primary keys and internal foreign keys for selected relationships. SQLite does not declare cross-database foreign keys between `extension` and `source`; use the joins listed below and validate IDs when importing a different source file. See the [source DB audit](SOURCE_DB_AUDIT.md) before relying on promotions, capacity, or refunds.
+**Release:** `fiction-retail-unified-v1.0.0` on the `codex/unified-nov2026` branch. The standalone runtime is `data/fiction_retail.sqlite`. It contains 27 business tables: ten copied from the unchanged DataHub source and 17 from the synthetic v0.4 extension. Table counts below describe the released business rows; `metadata` gains transformation keys. All dates are fictional and rebased by 916 days. See [the data contract](DATA_CONTRACT.md) for interpretation and [the source audit](SOURCE_DB_AUDIT.md) for retained anomalies.
 
 ```mermaid
 erDiagram
     customers ||--o{ orders : customer_id
     promotions ||--o{ orders : promo_id
-    orders ||--o{ order_items : order_id
-    products ||--o{ order_items : product_id
     suppliers ||--o{ products : supplier_id
+    products ||--o{ order_items : product_id
+    orders ||--o{ order_items : order_id
     products ||--o{ inventory : product_id
     warehouses ||--o{ inventory : warehouse_id
     orders ||--o{ shipments : order_id
     warehouses ||--o{ shipments : warehouse_id
     orders ||--o{ returns : order_id
     products ||--o{ returns : product_id
+    orders ||--o{ fulfillment_cases : order_id
+    fulfillment_cases ||--o{ inventory_snapshots_v2 : case_id
+    products ||--o{ knowledge_documents : product_id
 ```
 
-The diagram shows logical source joins, not enforced constraints. A return names an order and product, but the source has no `order_item_id` on a return, so a precise returned line cannot always be inferred from that pair alone.
+The diagram shows representative enforced FKs. A return has no `order_item_id`; its exact returned line cannot always be inferred. The builder also checks that each fulfillment case's `order_item_id`, `order_id`, and `product_id` agree without inventing a composite key.
 
-## Source tables
+## Source-derived tables
 
-The `ID` column in each row below is unique in the released data but not a declared SQLite primary key. Types are the actual SQLite declarations, not the upstream README's generalized type descriptions.
+Every logical source ID is now a declared `TEXT PRIMARY KEY`; existing ID values and business columns are preserved. Date fields remain ISO text, money remains SQLite `REAL`, and integer percentage discounts remain `INTEGER`.
 
-| Table (rows) | Grain and logical key | Columns and SQLite types |
+| Table (rows) | Primary key | Columns |
 |---|---|---|
-| `customers` (50,000) | One customer; `customer_id` | `customer_id TEXT`, `name TEXT`, `email TEXT`, `phone TEXT`, `signup_date TEXT`, `country TEXT`, `state TEXT`, `city TEXT`, `customer_segment TEXT` |
-| `orders` (150,000) | One order; `order_id` | `order_id TEXT`, `customer_id TEXT`, `order_date TEXT`, `order_status TEXT`, `total_amount REAL`, `payment_method TEXT`, `shipping_country TEXT`, `promo_id TEXT` |
-| `order_items` (346,202) | One order line; `order_item_id` | `order_item_id TEXT`, `order_id TEXT`, `product_id TEXT`, `quantity INTEGER`, `unit_price REAL`, `discount_pct INTEGER` |
-| `products` (5,000) | One imported product; `product_id` | `product_id TEXT`, `name TEXT`, `category TEXT`, `brand TEXT`, `price REAL`, `weight_kg REAL`, `supplier_id TEXT` |
-| `suppliers` (500) | One supplier; `supplier_id` | `supplier_id TEXT`, `name TEXT`, `country TEXT`, `contract_start_date TEXT`, `status TEXT` |
-| `inventory` (11,476) | One product/warehouse stock row; `inventory_id` | `inventory_id TEXT`, `product_id TEXT`, `warehouse_id TEXT`, `quantity_on_hand INTEGER`, `reserved_quantity INTEGER`, `reorder_threshold INTEGER`, `last_restocked_date TEXT` |
-| `warehouses` (15) | One warehouse; `warehouse_id` | `warehouse_id TEXT`, `name TEXT`, `city TEXT`, `state TEXT`, `country TEXT`, `capacity_units INTEGER`, `opened_date TEXT` |
-| `shipments` (119,936) | One shipment; `shipment_id` | `shipment_id TEXT`, `order_id TEXT`, `warehouse_id TEXT`, `carrier TEXT`, `tracking_number TEXT`, `shipped_date TEXT`, `delivered_date TEXT`, `shipment_state TEXT` |
-| `returns` (11,934) | One return record; `return_id` | `return_id TEXT`, `order_id TEXT`, `product_id TEXT`, `return_date TEXT`, `refund_amount REAL`, `return_reason_code TEXT`, `processed_by TEXT` |
-| `promotions` (200) | One promotion; `promo_id` | `promo_id TEXT`, `promo_code TEXT`, `description TEXT`, `discount_pct INTEGER`, `valid_from TEXT`, `valid_until TEXT`, `applies_to_category TEXT`, `max_uses INTEGER`, `status TEXT` |
+| `customers` (50,000) | `customer_id` | `customer_id, name, email, phone, signup_date, country, state, city, customer_segment` |
+| `orders` (150,000) | `order_id` | `order_id, customer_id, order_date, order_status, total_amount, payment_method, shipping_country, promo_id` |
+| `order_items` (346,202) | `order_item_id` | `order_item_id, order_id, product_id, quantity, unit_price, discount_pct` |
+| `products` (5,000) | `product_id` | `product_id, name, category, brand, price, weight_kg, supplier_id, sku` |
+| `suppliers` (500) | `supplier_id` | `supplier_id, name, country, contract_start_date, status` |
+| `inventory` (11,476) | `inventory_id` | `inventory_id, product_id, warehouse_id, quantity_on_hand, reserved_quantity, reorder_threshold, last_restocked_date` |
+| `warehouses` (15) | `warehouse_id` | `warehouse_id, name, city, state, country, capacity_units, opened_date` |
+| `shipments` (119,936) | `shipment_id` | `shipment_id, order_id, warehouse_id, carrier, tracking_number, shipped_date, delivered_date, shipment_state` |
+| `returns` (11,934) | `return_id` | `return_id, order_id, product_id, return_date, refund_amount, return_reason_code, processed_by` |
+| `promotions` (200) | `promo_id` | `promo_id, promo_code, description, discount_pct, valid_from, valid_until, applies_to_category, max_uses, status` |
 
-### Source field meanings that affect queries
+`products.sku` is the only new source-derived business column: a unique, non-empty, non-null Fiction-generated identifier. Its deterministic formula is `FR-` plus the first 16 uppercase hex characters of SHA-256(`product_id`). Foreign keys continue to use `product_id`.
 
-- `orders.order_date`, `shipments.shipped_date`, `shipments.delivered_date`, and `returns.return_date` are text dates. Source order dates span 2023-01-01 through 2024-04-30.
-- `orders.total_amount` is recorded USD order value. It matches the sum of `order_items.quantity * unit_price * (1 - discount_pct / 100.0)` within USD 0.02 for all 150,000 orders in this snapshot. It does not prove payment settlement.
-- `order_items.discount_pct` and `promotions.discount_pct` are integer percentage points, not fractions. `order_items.unit_price` is the historical transaction price.
-- `promotions.applies_to_category = 'all'` is the actual unrestricted-promotion sentinel in this SQLite file. It is not `NULL`, despite the upstream README description. Category-specific promotion links have substantial mismatches with their orders' product categories; see the audit.
-- `products.price` and `products.weight_kg` are undated import fields. The imported product names are often not credible merchandise descriptions. Do not infer current offers or product specifications from them.
-- `inventory.quantity_on_hand - inventory.reserved_quantity` is a stock calculation, but the table lacks an observation timestamp. `last_restocked_date` is **not** a snapshot timestamp.
-- `returns.refund_amount` is a recorded amount, not proof that a refund was approved or paid. `shipments` has no promised delivery date, so the schema cannot establish on-time delivery.
-- `customers.name`, `email`, and `phone` are fictional but still personal-data-shaped fields. Customer rows are excluded from the RAG corpus.
+## Extension-derived tables
 
-## Extension tables
+The original extension keys, CHECK constraints and seven explicit indexes are retained. These rows remain synthetic scenarios; copying them into one database does not make them source observations.
 
-The extension's `provenance` fields mark scenario-generated records. All extension row counts and columns below were read from the v0.4 SQLite file.
-
-| Table (rows) | Grain / declared key | Columns and SQLite types |
+| Table (rows) | Primary key | Columns |
 |---|---|---|
-| `teams` (4) | One sales team; PK `team_id` | `team_id TEXT`, `name TEXT` |
-| `employees` (24) | One synthetic advisor; PK `employee_id` | `employee_id TEXT`, `team_id TEXT`, `display_name TEXT`, `role TEXT`, `hire_date TEXT`, `active INTEGER` |
-| `sales_opportunities` (564) | One synthetic opportunity; PK `opportunity_id` | `opportunity_id TEXT`, `employee_id TEXT`, `customer_id TEXT`, `order_id TEXT`, `opened_at TEXT`, `closed_at TEXT`, `status TEXT`, `provenance TEXT` |
-| `sales_activities` (1,008) | One synthetic activity; PK `activity_id` | `activity_id TEXT`, `opportunity_id TEXT`, `employee_id TEXT`, `occurred_at TEXT`, `activity_type TEXT`, `outcome TEXT`, `provenance TEXT` |
-| `sales_targets` (24) | Advisor/month/metric target; composite PK (`employee_id`, `month`, `metric_key`) | `employee_id TEXT`, `month TEXT`, `metric_key TEXT`, `target_value_usd TEXT`, `provenance TEXT` |
-| `fulfillment_cases` (100) | One selected backorder investigation; PK `case_id` | `case_id TEXT`, `order_id TEXT`, `order_item_id TEXT`, `product_id TEXT`, `request_qty INTEGER`, `assigned_warehouse_id TEXT`, `case_date TEXT`, `provenance TEXT` |
-| `fulfillment_events` (200) | One legacy case event; PK `event_id` | `event_id TEXT`, `case_id TEXT`, `event_time TEXT`, `event_type TEXT`, `provenance TEXT` |
-| `inventory_observations` (126) | One legacy case observation; PK `observation_id` | `observation_id TEXT`, `case_id TEXT`, `product_id TEXT`, `warehouse_id TEXT`, `observed_at TEXT`, `on_hand INTEGER`, `reserved INTEGER`, `provenance TEXT` |
-| `warehouse_eligibility` (200) | One case/warehouse rule; composite PK (`case_id`, `warehouse_id`) | `case_id TEXT`, `warehouse_id TEXT`, `eligible INTEGER`, `reason_code TEXT`, `provenance TEXT` |
-| `fulfillment_policies` (1) | One warehouse-policy index row; PK `policy_id` | `policy_id TEXT`, `policy_summary TEXT`, `requires_manager_approval INTEGER`, `provenance TEXT` |
-| `operational_events` (400) | One timestamped case event; PK `event_id` | `event_id TEXT`, `case_id TEXT`, `event_type TEXT`, `occurred_at TEXT`, `recorded_at TEXT`, `source_system TEXT`, `provenance TEXT` |
-| `inventory_snapshots_v2` (216) | One timestamped case/warehouse/product snapshot; PK `snapshot_id` | `snapshot_id TEXT`, `case_id TEXT`, `product_id TEXT`, `warehouse_id TEXT`, `observed_at TEXT`, `received_at TEXT`, `on_hand INTEGER`, `reserved INTEGER`, `source_system TEXT`, `provenance TEXT` |
-| `inventory_movements_v2` (22) | One case-scoped stock movement; PK `movement_id` | `movement_id TEXT`, `case_id TEXT`, `product_id TEXT`, `warehouse_id TEXT`, `occurred_at TEXT`, `delta_on_hand INTEGER`, `delta_reserved INTEGER`, `reason TEXT`, `provenance TEXT` |
-| `product_enrichment` (50) | One curated product; PK `product_id` | `product_id TEXT`, `source_name TEXT`, `category TEXT`, `synthetic_display_name TEXT`, `product_type TEXT`, `synthetic_specs TEXT`, `compatibility_note TEXT`, `provenance TEXT`, `curated_list_price_usd TEXT`, `curated_shipping_weight_kg TEXT`, `catalog_effective_from TEXT`, `catalog_effective_to TEXT` |
-| `product_pricing_constraints` (20) | One dated product price rule; PK `product_id` | `product_id TEXT`, `unit_cost_usd TEXT`, `min_margin_bps INTEGER`, `max_discount_bps INTEGER`, `effective_from TEXT`, `effective_to TEXT`, `policy_id TEXT`, `provenance TEXT` |
-| `knowledge_documents` (5,003) | One Markdown document; PK `document_id` | `document_id TEXT`, `product_id TEXT`, `policy_id TEXT`, `kind TEXT`, `relative_path TEXT`, `sha256 TEXT`, `provenance TEXT` |
-| `metadata` (20) | One dataset key/value; PK `key` | `key TEXT`, `value TEXT` |
+| `teams` (4) | `team_id` | `team_id, name` |
+| `employees` (24) | `employee_id` | `employee_id, team_id, display_name, role, hire_date, active` |
+| `sales_opportunities` (564) | `opportunity_id` | `opportunity_id, employee_id, customer_id, order_id, opened_at, closed_at, status, provenance` |
+| `sales_activities` (1,008) | `activity_id` | `activity_id, opportunity_id, employee_id, occurred_at, activity_type, outcome, provenance` |
+| `sales_targets` (24) | `(employee_id, month, metric_key)` | `employee_id, month, metric_key, target_value_usd, provenance, period_start, period_end` |
+| `fulfillment_cases` (100) | `case_id` | `case_id, order_id, order_item_id, product_id, request_qty, assigned_warehouse_id, case_date, provenance` |
+| `fulfillment_events` (200) | `event_id` | `event_id, case_id, event_time, event_type, provenance` |
+| `inventory_observations` (126) | `observation_id` | `observation_id, case_id, product_id, warehouse_id, observed_at, on_hand, reserved, provenance` |
+| `warehouse_eligibility` (200) | `(case_id, warehouse_id)` | `case_id, warehouse_id, eligible, reason_code, provenance` |
+| `fulfillment_policies` (1) | `policy_id` | `policy_id, policy_summary, requires_manager_approval, provenance` |
+| `operational_events` (400) | `event_id` | `event_id, case_id, event_type, occurred_at, recorded_at, source_system, provenance` |
+| `inventory_snapshots_v2` (216) | `snapshot_id` | `snapshot_id, case_id, product_id, warehouse_id, observed_at, received_at, on_hand, reserved, source_system, provenance` |
+| `inventory_movements_v2` (22) | `movement_id` | `movement_id, case_id, product_id, warehouse_id, occurred_at, delta_on_hand, delta_reserved, reason, provenance` |
+| `product_enrichment` (50) | `product_id` | `product_id, source_name, category, synthetic_display_name, product_type, synthetic_specs, compatibility_note, provenance, curated_list_price_usd, curated_shipping_weight_kg, catalog_effective_from, catalog_effective_to` |
+| `product_pricing_constraints` (20) | `product_id` | `product_id, unit_cost_usd, min_margin_bps, max_discount_bps, effective_from, effective_to, policy_id, provenance` |
+| `knowledge_documents` (5,003) | `document_id` | `document_id, product_id, policy_id, kind, relative_path, sha256, provenance` |
+| `metadata` (20 → 34) | `key` | `key, value` |
 
-### Extension relationships
+`period_start` and `period_end` are the two new extension metadata columns. The translated target period is `[2026-10-04, 2026-11-03)`; `month='2026-10'` is its start-month cohort label, not a calendar-month window. The decimal-valued `curated_list_price_usd`, `curated_shipping_weight_kg`, `unit_cost_usd` and `target_value_usd` remain decimal `TEXT` rather than floating-point estimates.
 
-| From | To | Meaning / enforcement |
+## Relationships and constraints
+
+Source-derived FKs: `orders.customer_id → customers`, nullable `orders.promo_id → promotions`; `order_items.order_id → orders`, `order_items.product_id → products`; `products.supplier_id → suppliers`; `inventory.product_id → products`, `inventory.warehouse_id → warehouses`; `shipments.order_id → orders`, `shipments.warehouse_id → warehouses`; `returns.order_id → orders`, `returns.product_id → products`.
+
+Cross-origin FKs added in the unified database: `sales_opportunities.customer_id → customers`, optional `order_id → orders`; `fulfillment_cases.order_id → orders`, `order_item_id → order_items`, `product_id → products`, `assigned_warehouse_id → warehouses`; product/warehouse references in `inventory_observations`, `inventory_snapshots_v2`, `inventory_movements_v2`, and `warehouse_eligibility`; `product_enrichment.product_id`, `product_pricing_constraints.product_id`, and nullable `knowledge_documents.product_id → products`. Existing extension FKs connect teams, employees, opportunities, activities, targets, cases and their events/snapshots.
+
+The builder inserts parents before children with `PRAGMA foreign_keys=ON`, runs `PRAGMA foreign_key_check` and `PRAGMA integrity_check`, and rejects any orphan, duplicate PK/SKU, or case/line identity mismatch. SQLite requires [foreign-key enforcement to be enabled per connection](https://www.sqlite.org/foreignkeys.html); the unified source tables were rebuilt with declared keys because [ALTER TABLE does not add a primary-key constraint](https://www.sqlite.org/lang_altertable.html). No default `ON DELETE CASCADE` was added. A policy reference is checked against published policy documents and effective intervals rather than forced into a false FK spanning distinct policy tables.
+
+## Indexes and query shape
+
+Declared PK/UNIQUE constraints create their own SQLite indexes. The seven inherited extension indexes serve opportunity/employee/close time, activity/opportunity/time, case/product, observation/case, snapshot/case/warehouse/time, operational event/case/time, and knowledge document/product/kind lookups. The new indexes are:
+
+| Index | Columns | Main lookup |
 |---|---|---|
-| `employees.team_id` | `teams.team_id` | Declared extension FK |
-| `sales_opportunities.employee_id`, `sales_activities.employee_id`, `sales_targets.employee_id` | `employees.employee_id` | Declared extension FKs |
-| `sales_activities.opportunity_id` | `sales_opportunities.opportunity_id` | Declared extension FK |
-| `fulfillment_events.case_id`, `inventory_observations.case_id`, `warehouse_eligibility.case_id`, `operational_events.case_id`, `inventory_snapshots_v2.case_id`, `inventory_movements_v2.case_id` | `fulfillment_cases.case_id` | Declared extension FKs |
-| `product_enrichment.product_id`, `product_pricing_constraints.product_id`, product-guide `knowledge_documents.product_id` | `source.products.product_id` | Cross-database logical joins; no declared FK |
-| `sales_opportunities.customer_id`, non-null `sales_opportunities.order_id` | `source.customers.customer_id`, `source.orders.order_id` | Cross-database logical joins; a won opportunity links to an order |
-| `fulfillment_cases.order_id`, `order_item_id`, `product_id`, `assigned_warehouse_id` | Corresponding source order, line, product, warehouse IDs | Cross-database logical joins |
-| `knowledge_documents.policy_id` | Policy IDs in the Markdown files and applicable policy tables | Logical reference; check `kind` and date |
+| `idx_orders_customer` | `orders(customer_id)` | Customer order history |
+| `idx_orders_date_status` | `orders(order_date, order_status)` | Period-only filters and top sellers |
+| `idx_orders_status_date_amount` | `orders(order_status, order_date, total_amount)` | Covering delivered-value aggregate |
+| `idx_orders_promo` | `orders(promo_id)` | Promotion reconciliation |
+| `idx_order_items_order_product` | `order_items(order_id, product_id)` | Order lines and eligible items |
+| `idx_order_items_product` | `order_items(product_id)` | Product sales |
+| `idx_inventory_product_warehouse` | UNIQUE `inventory(product_id, warehouse_id)` | Product stock and pair integrity |
+| `idx_inventory_warehouse` | `inventory(warehouse_id)` | Warehouse totals |
+| `idx_shipments_order` | `shipments(order_id)` | Order shipment |
+| `idx_shipments_tracking` | `shipments(tracking_number)` | Tracking lookup |
+| `idx_returns_order_product` | `returns(order_id, product_id)` | Return reconciliation |
+| `idx_sales_opportunities_customer` | `sales_opportunities(customer_id)` | Customer opportunities |
 
-The released data has zero unmatched rows for the sampled cross-database joins from enrichment, guide index, pricing constraints, opportunities, and fulfillment cases. Those checks do not create SQL-enforced cross-database constraints.
+The source has no declared indexes; compare actual [SQLite `EXPLAIN QUERY PLAN`](https://www.sqlite.org/eqp.html) and timings before claiming a speedup. The released database is a historical/synthetic snapshot, so any 4-second application timeout must be evaluated with representative SQL and hardware.
 
-### Time, money, and policy rules
+### Local index benchmark
 
-- The 50 curated offers in `product_enrichment` and 20 rows in `product_pricing_constraints` apply to `[2024-05-01, 2024-06-01)`. Use `catalog_effective_from <= :as_of AND :as_of < catalog_effective_to` or the corresponding `effective_from`/`effective_to` fields.
-- `curated_list_price_usd`, `curated_shipping_weight_kg`, `unit_cost_usd`, `sales_targets.target_value_usd` are decimal values stored as `TEXT`. Parse them as decimal numbers, not floating-point estimates. Weight is kilograms; money is USD.
-- `min_margin_bps` and `max_discount_bps` are basis points: 10,000 bps = 100%. Compute gross margin on the **proposed selling price**, and discount against the **dated list price**. Both limits must pass; approval is still required.
-- Case-scoped `inventory_snapshots_v2` includes `observed_at` and `received_at`; `operational_events` includes `occurred_at` and `recorded_at`. These timestamps are synthetic UTC strings ending in `Z`. Choose the latest snapshot available before the case evidence cutoff and apply the 24-hour freshness rule from policy `FR-WH-2024-04`. Do not substitute the source's undated `inventory` rows or old `inventory_observations` for this decision.
-- `knowledge_documents.relative_path` is relative to `knowledge/`, with `sha256` of the exact Markdown file bytes. It maps 5,000 product guides and three policies. Guide content is fictional, even when its `product_id` exists in the source.
-- The runtime has no `fulfillment_decisions_v2` table or `scenario_tag` columns. Agents must derive a proposal from evidence rather than read a precomputed answer.
+Measured on Windows 11 with Python 3.14.8 / SQLite 3.50.4. The baseline was a copy of the same unified data with all **19 explicit indexes** removed; PK/UNIQUE auto-indexes remained. SQLite automatic indexes used their default setting. Each number is the median of three warmed executions, in milliseconds, with identical parameters and row counts. These are local query latencies, not a service-level guarantee.
 
-## Example cross-database lookup
+| Query | Baseline ms | Release ms | Rows returned |
+|---|---:|---:|---:|
+| Order by PK | 0.030 | 0.034 | 1 |
+| Product by SKU | 0.027 | 0.024 | 1 |
+| Order → items → product | 94.533 | 0.034 | 2 |
+| Inventory by product/warehouse | 1.472 | 0.031 | 1 |
+| Shipment by order | 33.619 | 0.025 | 1 |
+| Return by order/product | 3.010 | 0.024 | 1 |
+| Case events → stock evidence | 0.084 | 0.041 | 4 |
+| Product guide lookup | 1.096 | 0.029 | 1 |
+| Recorded delivered-order value, translated target period | 32.282 | 1.541 | 1 |
+| Top-selling products, translated target period | 1,863.166 | 864.109 | 10 |
 
-After attaching both files read-only as `source` and `extension` (see [connection setup](AGENT_DATASET.md#query-the-two-databases)):
+For the order-line lookup, `EXPLAIN QUERY PLAN` changed from `SCAN i` to `SEARCH i USING INDEX idx_order_items_order_product`. The delivered-value query changed from `SCAN orders` to a covering search on `idx_orders_status_date_amount`; top sellers changed from an order-item scan to date-filtered orders joined through `idx_order_items_order_product`. The date-first and status-first order indexes were both retained: testing the status-first index alone made top sellers take 22,752 ms, above the 4-second target, while both indexes brought that query below one second on this machine. The PK lookup was effectively unchanged. Larger ranges, cold caches and application overhead remain unmeasured.
+
+## Query and inspect
 
 ```sql
-SELECT p.product_id,
-       p.category,
-       k.relative_path AS guide_path,
-       e.synthetic_display_name,
-       e.curated_list_price_usd
-FROM source.products AS p
-JOIN extension.knowledge_documents AS k
-  ON k.product_id = p.product_id AND k.kind = 'product_guide'
-LEFT JOIN extension.product_enrichment AS e
-  ON e.product_id = p.product_id
- AND :as_of >= e.catalog_effective_from
- AND :as_of < e.catalog_effective_to
-WHERE p.product_id = :product_id;
+SELECT p.product_id, p.sku, e.synthetic_display_name,
+       e.curated_list_price_usd, k.relative_path
+FROM products p
+JOIN knowledge_documents k ON k.product_id=p.product_id
+  AND k.kind='product_guide'
+LEFT JOIN product_enrichment e ON e.product_id=p.product_id
+  AND e.catalog_effective_from<=:as_of AND :as_of<e.catalog_effective_to
+WHERE p.sku=:sku;
+
+PRAGMA table_info('products');
+PRAGMA foreign_key_list('fulfillment_cases');
+PRAGMA index_list('orders');
+PRAGMA foreign_key_check;
+PRAGMA integrity_check;
 ```
 
-The `LEFT JOIN` preserves a guide for any of the 5,000 products. A `NULL` curated price means that product has no dated curated offer for `:as_of`; it does **not** authorize falling back to the undated source import price as a current selling price.
-
-## Inspect the schema directly
-
-```sql
-SELECT name, sql FROM source.sqlite_master WHERE type = 'table' ORDER BY name;
-SELECT name, sql FROM extension.sqlite_master WHERE type = 'table' ORDER BY name;
-PRAGMA source.table_info('orders');
-PRAGMA extension.table_info('product_enrichment');
-PRAGMA extension.foreign_key_list('sales_activities');
-```
-
-The schema chunks in `rag/chunks.jsonl` also list columns, types, row counts, and purpose for all 27 tables. They are retrieval aids; inspect SQLite itself when implementing a query or checking constraints.
+There is no runtime `ATTACH DATABASE` dependency. `knowledge_documents.relative_path` is relative to `knowledge/` and its SHA-256 must match the exact Markdown bytes. Product and RAG metadata carry both product ID and SKU; only 50 products have a dated curated offer.

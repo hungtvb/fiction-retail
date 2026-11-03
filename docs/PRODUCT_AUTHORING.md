@@ -4,7 +4,7 @@ The source database has 5,000 product IDs but its imported names are generic bus
 
 ## Ownership and layout
 
-Each product ID has one Markdown file. The original 50 curated guides are in `knowledge/products/<product_id>.md`; the other 4,950 are sharded under `knowledge/products/<first-two-ID-characters>/<product_id>.md`. Sharding keeps directory width manageable. The file itself is the editable knowledge source. `scripts/build_v04.py` reads these files, checks complete ID coverage and unique content hashes, and records their paths and SHA-256 values in `knowledge_documents`. It never writes product prose.
+Each product ID has one Markdown file. The original 50 curated guides are in `knowledge/products/<product_id>.md`; the other 4,950 are sharded under `knowledge/products/<first-two-ID-characters>/<product_id>.md`. Sharding keeps directory width manageable. The file itself is the editable knowledge source. `scripts/build_v04.py` reads these files, checks complete ID coverage and unique content hashes, and records their paths and SHA-256 values in `knowledge_documents`. The unified builder preserves their prose and adds SKU links in structured product and RAG metadata. Neither builder writes product prose.
 
 The initial 4,950 additional guides were batch drafted as **synthetic content** from category-specific product concepts, configurations, care directions, and limits. They are distinct files with distinct titles and configuration details. They have **not** received individual human product review. Their value is as an internally consistent fictional RAG exercise; they must not be presented as verified retail catalog facts. The first 50 curated guides also have fictional provenance, despite their deeper descriptions.
 

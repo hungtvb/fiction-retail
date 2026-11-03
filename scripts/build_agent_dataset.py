@@ -1,4 +1,8 @@
-"""Package the canonical SQLite source, v0.4 extension and grounded RAG corpus."""
+"""Legacy v0.4 packager and shared chunk helpers.
+
+The published unified release is built by scripts.build_unified via
+scripts.rebuild_pack --unified; this module retains historical 2024 inputs.
+"""
 from __future__ import annotations
 
 import argparse

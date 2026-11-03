@@ -1,16 +1,13 @@
-# Fiction Retail Agent Dataset
+# Fiction Retail — Unified Dataset
 
-A fictional retail dataset for SQL and RAG-based agent experiments. It combines the unchanged [DataHub Fiction Retail SQLite source](https://github.com/datahub-project/static-assets/tree/main/datasets/fiction-retail), a synthetic extension, and English product and policy knowledge.
+A fictional B2C retail dataset for SQL analysis and grounded retrieval. The standalone runtime is [`data/fiction_retail.sqlite`](data/fiction_retail.sqlite): 27 business tables, 5,000 stable Fiction-generated SKUs, 150,000 orders, and 100 scoped fulfillment cases. Its business reference date is **3 November 2026, Asia/Ho_Chi_Minh**. Rebasing dates does not make this live operational data.
 
-## Included in this repository
+The unchanged [DataHub SQLite source](https://github.com/datahub-project/static-assets/tree/main/datasets/fiction-retail) remains at [`data/fiction-retail.db`](data/fiction-retail.db) for provenance and rebuilding. Both large databases use Git LFS; run `git lfs pull` after cloning. The authored corpus contains 5,000 individual [product guides](knowledge/products), three dated [policies](knowledge/policies), and 10,093 [RAG chunks](rag/chunks.jsonl).
 
-- `data/fiction-retail.db`: original ten-table source database, tracked with Git LFS.
-- `data/fiction_runtime_v04.sqlite`: scenario extension, including dated catalog offers and a hash index for all 5,000 product guides.
-- `knowledge/products/`: one editable fictional guide per original product ID (5,000 files).
-- `knowledge/policies/`: three dated fictional business policies.
-- `rag/chunks.jsonl`: 10,093 English RAG chunks, including one complete guide chunk per product.
-- `manifest.json`: hashes and release counts.
+Build from the immutable source and authored guides:
 
-Install Git LFS before cloning, or run `git lfs pull` after cloning. The large source database is otherwise only an LFS pointer. To query the two databases together, build again, or ingest the RAG corpus, see the [dataset and usage guide](docs/AGENT_DATASET.md). The [schema reference](docs/SCHEMA.md) lists all 27 tables, columns, keys, and joins. The [source DB audit](docs/SOURCE_DB_AUDIT.md) records data quality findings. The [data contract](docs/DATA_CONTRACT.md) distinguishes source facts from fictional additions, and the [business assessment](docs/BUSINESS_ANALYSIS.md) reports measured indicators and limits.
+```powershell
+python -m scripts.rebuild_pack --unified --source data/fiction-retail.db --product-guides knowledge/products --output-dir .generated/release
+```
 
-The original import names do not identify credible retail products. All new guides are explicitly fictional interpretations linked by original `product_id`; only 50 products have dated curated list prices. The repository contains data for an agent, not an agent runtime or vector index.
+The destination must be absent or empty. Use [the dataset guide](docs/AGENT_DATASET.md) for SQL and RAG examples, [the schema](docs/SCHEMA.md) for keys and indexes, [the data contract](docs/DATA_CONTRACT.md) for time and financial semantics, [the business assessment](docs/BUSINESS_ANALYSIS.md) for source-era measures, and [the source audit](docs/SOURCE_DB_AUDIT.md) before interpreting promotions, refunds, or capacity.
