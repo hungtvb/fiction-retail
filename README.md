@@ -11,3 +11,5 @@ python -m scripts.rebuild_pack --unified --source data/fiction-retail.db --produ
 ```
 
 The destination must be absent or empty. Use [the dataset guide](docs/AGENT_DATASET.md) for SQL and RAG examples, [the schema](docs/SCHEMA.md) for keys and indexes, [the data contract](docs/DATA_CONTRACT.md) for time and financial semantics, [the business assessment](docs/BUSINESS_ANALYSIS.md) for source-era measures, and [the source audit](docs/SOURCE_DB_AUDIT.md) before interpreting promotions, refunds, or capacity.
+
+For a **small development/CI subset**, see [Fiction Lite v1.0.0](lite/README.md): a versioned 1.90 MiB XZ-compressed SQLite with a manifest, reproducible builder, golden SQL cases, and all 100 backorder cases. Run `python lite/prepare.py` from the repository root. Lite KPIs differ from Full, so use its own SQL oracle.
