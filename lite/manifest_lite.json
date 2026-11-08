@@ -1,0 +1,152 @@
+{
+  "business_timezone": "Asia/Ho_Chi_Minh",
+  "content_sha256": "c5470e1e9fe110bdd8d9702c79b58d95f7a41f639416e3f551b527d4120a27c8",
+  "data_quality": {
+    "promotion_category_mismatches": 685,
+    "refunds_above_order_value": 140,
+    "refunds_above_returned_product_lines": 350,
+    "warehouses_over_nominal_capacity": 15
+  },
+  "dataset_business_as_of": "2026-11-03T00:00:00+07:00",
+  "dataset_variant": "fiction-lite-v1.0.0",
+  "knowledge_documents_required": [
+    {
+      "path": "policies/FR-PRICE-2026-11-03.md",
+      "sha256": "598f8e92dcd45c4a5802abecff59f8670630ec5a1105bfa6f94893305f955566"
+    },
+    {
+      "path": "policies/FR-RET-2026-10-04.md",
+      "sha256": "0496f31538c06fac652884a01efc4639989fff64b98070c31a61372c6290bebd"
+    },
+    {
+      "path": "policies/FR-WH-2026-10-04.md",
+      "sha256": "f3ff7463e67e034360fd87b35c1c71286445be0de1431009591821489bd4d9c8"
+    },
+    {
+      "path": "products/001c1095-1d2a-4bbf-877d-c293399d00ac.md",
+      "sha256": "23f2374a2863af710e180f140eb48155bdc99709cca1dba14a5a7e959b1f5b3d"
+    },
+    {
+      "path": "products/00572c89-2202-4d1b-a52e-06af7a10465b.md",
+      "sha256": "0ef5f3094fbbcf65d1ec3b8e226ab85935eec0fcfa69f10323139e268992016f"
+    },
+    {
+      "path": "products/00e7bfdb-04ab-4165-8e2e-cd9b3828facc.md",
+      "sha256": "af0709f73d32faed5b86d7e57825728477544975b1ea05ddc3b7b9b6c21b2e91"
+    }
+  ],
+  "limitations": [
+    "KPI totals/ranking are subset-specific; never compare to full-data KPIs",
+    "Not all 5000 product guides are available; only listed knowledge files are supported",
+    "Base inventory is undated; source cannot prove current stock",
+    "Do not present this subset as complete/full Fiction release acceptance"
+  ],
+  "pack_version": "fiction-retail-unified-v1.0.0",
+  "parent_release_sha256": "015b0a84d8d93870c6facd359347f4c039bc7fc570000890c581010d0451af42",
+  "runtime_sha256": "ae387295f15f432f954e073320697071a1f25bee6bced4bda555db37c3f6f1ff",
+  "sample_sql_top3_delivered_october_2026": [
+    {
+      "sku": "FR-0907BFA75647933B",
+      "units": 10
+    },
+    {
+      "sku": "FR-979C82B966CA8536",
+      "units": 10
+    },
+    {
+      "sku": "FR-45B8AB8518D9EA52",
+      "units": 9
+    }
+  ],
+  "selected_order_counts_by_month": {
+    "2025-07": 96,
+    "2025-08": 101,
+    "2025-09": 108,
+    "2025-10": 100,
+    "2025-11": 105,
+    "2025-12": 102,
+    "2026-01": 115,
+    "2026-02": 110,
+    "2026-03": 116,
+    "2026-04": 131,
+    "2026-05": 131,
+    "2026-06": 139,
+    "2026-07": 137,
+    "2026-08": 391,
+    "2026-09": 831,
+    "2026-10": 1687,
+    "2026-11": 156
+  },
+  "selected_order_counts_by_status": {
+    "backordered": 260,
+    "canceled": 225,
+    "confirmed": 247,
+    "delivered": 2178,
+    "disputed": 146,
+    "fulfilling": 257,
+    "in_transit": 297,
+    "pending": 210,
+    "returned": 736
+  },
+  "selection_method": "deterministic stratification + complete 100-case evidence + all refund anomalies",
+  "source_order_counts_by_month": {
+    "2025-07": 3790,
+    "2025-08": 4773,
+    "2025-09": 4982,
+    "2025-10": 5624,
+    "2025-11": 5509,
+    "2025-12": 6130,
+    "2026-01": 6715,
+    "2026-02": 6738,
+    "2026-03": 8379,
+    "2026-04": 8807,
+    "2026-05": 10309,
+    "2026-06": 11179,
+    "2026-07": 13166,
+    "2026-08": 14959,
+    "2026-09": 16334,
+    "2026-10": 20637,
+    "2026-11": 1969
+  },
+  "source_order_counts_by_status": {
+    "backordered": 3039,
+    "canceled": 6069,
+    "confirmed": 7535,
+    "delivered": 97540,
+    "disputed": 1483,
+    "fulfilling": 7347,
+    "in_transit": 10462,
+    "pending": 4591,
+    "returned": 11934
+  },
+  "table_counts": {
+    "customers": 4117,
+    "employees": 24,
+    "fulfillment_cases": 100,
+    "fulfillment_events": 200,
+    "fulfillment_policies": 1,
+    "inventory": 10015,
+    "inventory_movements_v2": 22,
+    "inventory_observations": 126,
+    "inventory_snapshots_v2": 216,
+    "knowledge_documents": 6,
+    "metadata": 37,
+    "operational_events": 400,
+    "order_items": 10435,
+    "orders": 4556,
+    "product_enrichment": 50,
+    "product_pricing_constraints": 20,
+    "products": 4362,
+    "promotions": 177,
+    "returns": 736,
+    "sales_activities": 28,
+    "sales_opportunities": 16,
+    "sales_targets": 24,
+    "shipments": 3211,
+    "suppliers": 500,
+    "teams": 4,
+    "warehouse_eligibility": 200,
+    "warehouses": 15
+  },
+  "variant_is_subset": true
+}
