@@ -4,7 +4,14 @@
 
 ## Use Lite directly from GitHub (no Full download)
 
-The repo tracks **`lite/fiction_retail_lite.sqlite.xz`** (1,989,656 bytes, 1.90 MiB), not the raw SQLite. After cloning `fiction-retail`, run these commands from the repository root:
+The repo tracks **`lite/fiction_retail_lite.sqlite.xz`** (1,989,656 bytes, 1.90 MiB), not the raw SQLite. **To avoid downloading the 199 MiB Git LFS Full database during clone**, use:
+
+```bash
+GIT_LFS_SKIP_SMUDGE=1 git clone https://github.com/hungtvb/fiction-retail.git
+cd fiction-retail
+```
+
+On Windows PowerShell, set `$env:GIT_LFS_SKIP_SMUDGE = "1"` before `git clone` (and clear it afterwards). After cloning, run from the repository root:
 
 ```bash
 python lite/prepare.py
