@@ -1,0 +1,39 @@
+name: Fiction Lite integrity
+
+on:
+  pull_request:
+    paths:
+      - 'lite/**'
+      - '.github/workflows/fiction-lite.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'lite/**'
+      - '.github/workflows/fiction-lite.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-lite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GIT_LFS_SKIP_SMUDGE: '1'
+    steps:
+      - name: Checkout source without Full LFS blobs
+        uses: actions/checkout@v4
+        with:
+          lfs: false
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Restore Lite archive and verify SHA, schema, FK, oracles
+        run: python lite/prepare.py
+      - name: Install minimal test dependency
+        run: python -m pip install 'pytest>=8,<10'
+      - name: Verify seven source-backed SQLite scenarios
+        run: python -m pytest -q lite/tests/test_fiction_lite_pack.py
