@@ -1,0 +1,27 @@
+{
+  "period": "2026-10",
+  "second_rank_available_units_undated": 6402,
+  "second_rank_product_id": "4023cab6-a913-41b8-bcdf-f9e9f74ee1e8",
+  "source_status": "delivered",
+  "top3": [
+    {
+      "product_id": "0c4dd39d-ad01-4477-ad32-5499cdc9a2fc",
+      "rank": 1,
+      "sku": "FR-0907BFA75647933B",
+      "units": 10
+    },
+    {
+      "product_id": "4023cab6-a913-41b8-bcdf-f9e9f74ee1e8",
+      "rank": 2,
+      "sku": "FR-979C82B966CA8536",
+      "units": 10
+    },
+    {
+      "product_id": "0d33b25d-a998-4657-b7d9-80624964df3f",
+      "rank": 3,
+      "sku": "FR-45B8AB8518D9EA52",
+      "units": 9
+    }
+  ],
+  "warning": "Inventory has no observation timestamp; do not claim live stock"
+}
